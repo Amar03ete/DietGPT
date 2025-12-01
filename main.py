@@ -3,8 +3,9 @@ from langchain_groq import ChatGroq
 import os
 import re
 
+#class command to call your own perticular llm model ive used grok so this is check for your own 
 llm_restro = ChatGroq(
-    api_key = "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",
+    api_key = "********use your own Api key **********",
     model = "meta-llama/llama-4-maverick-17b-128e-instruct",
     temperature = 0.0
 )
