@@ -2,8 +2,12 @@
 
 DietGPT is an AI nutrition assistant that helps create personalized meal plans, recipe ideas, macronutrient estimates, and shopping lists tailored to goals and dietary constraints.
 
-Status: Draft
-• Author: Amar03ete
+---
+
+> **Author:** [Amar03ete](https://github.com/Amar03ete)
+
+>**Status:** Draft
+
 
 Why use DietGPT?
 - Fast meal-plan drafts for different goals (weight loss, muscle gain, maintenance).
@@ -56,3 +60,11 @@ Configuration
 Development & testing
 - Tests: npm test or pytest (if Python parts exist)
 - Run in Docker (optional): add a Dockerfile and docker-compose if you plan to containerize.
+- 
+---
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
