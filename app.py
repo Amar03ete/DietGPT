@@ -7,8 +7,8 @@ import re
 app = Flask(__name__)
 
 
-groq_api_key = os.getenv('GROQ_API_KEY', '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')
-
+groq_api_key = os.getenv('GROQ_API_KEY', '******use your own Api key******')
+#class command to call your own perticular llm model
 llm_resto = ChatGroq(
     api_key = groq_api_key,
     model = "llama-3.3-70b-versatile",
