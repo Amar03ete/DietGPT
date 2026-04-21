@@ -337,6 +337,7 @@ prompt_template_resto = PromptTemplate(
         "- For MAINTAIN: Balanced mix of strength, cardio, and flexibility, 3-5 days/week\n"
         "Include specific exercises like: Bench Press, Squats, Deadlifts, Running, Cycling, Yoga, etc. Be specific with exercise names.\n"
         "Calculate macros based on {goal} goal. For bulk: surplus calories, high protein. For cut: deficit calories, high protein, lower carbs. For maintain: maintenance calories.\n"
+<<<<<<< HEAD
     ),
 )
 
@@ -904,34 +905,54 @@ def recommend():
                 ]
 
             def extract_nutrition_stats(text):
+                """Extract nutrition statistics from the AI response"""
                 stats = {}
-                calories_match = re.search(r"Calories:\s*([0-9,]+)", text, re.IGNORECASE)
+                # Extract calories
+                calories_match = re.search(r'Calories:\s*([0-9,]+)', text, re.IGNORECASE)
                 if calories_match:
-                    stats["calories"] = calories_match.group(1).replace(",", "")
-
-                protein_match = re.search(r"Protein:\s*([0-9,]+)\s*g\s*\(([0-9]+)%\)", text, re.IGNORECASE)
+                    stats['calories'] = calories_match.group(1).replace(',', '')
+                
+                # Extract macros
+                protein_match = re.search(r'Protein:\s*([0-9,]+)\s*g\s*\(([0-9]+)%\)', text, re.IGNORECASE)
                 if protein_match:
-                    stats["protein"] = protein_match.group(1).replace(",", "")
-                    stats["protein_percent"] = protein_match.group(2)
-
-                carbs_match = re.search(r"Carbs:\s*([0-9,]+)\s*g\s*\(([0-9]+)%\)", text, re.IGNORECASE)
+                    stats['protein'] = protein_match.group(1).replace(',', '')
+                    stats['protein_percent'] = protein_match.group(2)
+                
+                carbs_match = re.search(r'Carbs:\s*([0-9,]+)\s*g\s*\(([0-9]+)%\)', text, re.IGNORECASE)
                 if carbs_match:
-                    stats["carbs"] = carbs_match.group(1).replace(",", "")
-                    stats["carbs_percent"] = carbs_match.group(2)
-
-                fats_match = re.search(r"Fats:\s*([0-9,]+)\s*g\s*\(([0-9]+)%\)", text, re.IGNORECASE)
+                    stats['carbs'] = carbs_match.group(1).replace(',', '')
+                    stats['carbs_percent'] = carbs_match.group(2)
+                
+                fats_match = re.search(r'Fats:\s*([0-9,]+)\s*g\s*\(([0-9]+)%\)', text, re.IGNORECASE)
                 if fats_match:
-                    stats["fats"] = fats_match.group(1).replace(",", "")
-                    stats["fats_percent"] = fats_match.group(2)
-
-                fiber_match = re.search(r"Fiber:\s*([0-9,]+)\s*g", text, re.IGNORECASE)
+                    stats['fats'] = fats_match.group(1).replace(',', '')
+                    stats['fats_percent'] = fats_match.group(2)
+                
+                # Extract other nutrients
+                fiber_match = re.search(r'Fiber:\s*([0-9,]+)\s*g', text, re.IGNORECASE)
                 if fiber_match:
-                    stats["fiber"] = fiber_match.group(1).replace(",", "")
-
-                water_match = re.search(r"Water:\s*([0-9.]+)\s*liters?", text, re.IGNORECASE)
+                    stats['fiber'] = fiber_match.group(1).replace(',', '')
+                
+                sodium_match = re.search(r'Sodium:\s*([0-9,]+)\s*mg', text, re.IGNORECASE)
+                if sodium_match:
+                    stats['sodium'] = sodium_match.group(1).replace(',', '')
+                
+                calcium_match = re.search(r'Calcium:\s*([0-9,]+)\s*mg', text, re.IGNORECASE)
+                if calcium_match:
+                    stats['calcium'] = calcium_match.group(1).replace(',', '')
+                
+                iron_match = re.search(r'Iron:\s*([0-9,]+)\s*mg', text, re.IGNORECASE)
+                if iron_match:
+                    stats['iron'] = iron_match.group(1).replace(',', '')
+                
+                vitd_match = re.search(r'Vitamin D:\s*([0-9,]+)\s*IU', text, re.IGNORECASE)
+                if vitd_match:
+                    stats['vitamin_d'] = vitd_match.group(1).replace(',', '')
+                
+                water_match = re.search(r'Water:\s*([0-9.]+)\s*liters?', text, re.IGNORECASE)
                 if water_match:
-                    stats["water"] = water_match.group(1)
-
+                    stats['water'] = water_match.group(1)
+                
                 return stats
 
             nutrition_stats = extract_nutrition_stats(results_text)
@@ -940,9 +961,20 @@ def recommend():
             breakfast_names = re.findall(r"Breakfast:\s*(.*?)(?=\n\n|Lunch:|$)", results_text, re.DOTALL)
             lunch_names = re.findall(r"Lunch:\s*(.*?)(?=\n\n|Dinner:|$)", results_text, re.DOTALL)
             dinner_names = re.findall(r"Dinner:\s*(.*?)(?=\n\n|Workouts:|$)", results_text, re.DOTALL)
+            
+            # Improved workout extraction
             workout_names = re.findall(r"Workouts?:\s*(.*?)(?=\n\n|$)", results_text, re.DOTALL | re.IGNORECASE)
             if not workout_names:
-                workout_names = re.findall(r"(?:Workout|Exercise)[s\s]*:?\s*(.*?)(?=\n\n|$)", results_text, re.DOTALL | re.IGNORECASE)
+                workout_names = re.findall(r'Workout[s\s]*[Rr]ecommendations?:\s*(.*?)(?=\n\n|$)', results_text, re.DOTALL | re.IGNORECASE)
+            if not workout_names:
+                workout_names = re.findall(r'Exercise[s\s]*[Rr]ecommendations?:\s*(.*?)(?=\n\n|$)', results_text, re.DOTALL | re.IGNORECASE)
+            if not workout_names:
+                workout_names = re.findall(r'(?:Workout|Exercise)[s\s]*:?\s*(.*?)(?=\n\n|$)', results_text, re.DOTALL | re.IGNORECASE)
+            if not workout_names:
+                workout_section = re.search(r'Workout.*?(?:\n|$)(.*?)(?=\n\n|$)', results_text, re.DOTALL | re.IGNORECASE)
+                if workout_section:
+                    workout_text = workout_section.group(1)
+                    workout_names = [workout_text]
 
             homemade_staples = clean_list(homemade_staples[0]) if homemade_staples else []
             breakfast_names = clean_list(breakfast_names[0]) if breakfast_names else []
@@ -1056,7 +1088,7 @@ def robots():
         return send_from_directory(".", "robots.txt", mimetype="text/plain")
     except Exception:
         return Response(
-            "User-agent: *\nAllow: /\nSitemap: https://fixyourdiet.vercel.app/sitemap.xml",
+            f"User-agent: *\nAllow: /\nSitemap: {BASE_URL}/sitemap.xml",
             mimetype="text/plain",
         )
 
@@ -1066,11 +1098,11 @@ def sitemap():
     try:
         return send_from_directory(".", "sitemap.xml", mimetype="application/xml")
     except Exception:
-        sitemap_content = """<?xml version="1.0" encoding="UTF-8"?>
+        sitemap_content = f"""<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-        <loc>https://fixyourdiet.vercel.app/</loc>
-        <lastmod>2024-01-15</lastmod>
+        <loc>{BASE_URL}/</loc>
+        <lastmod>{datetime.now().strftime('%Y-%m-%d')}</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
     </url>

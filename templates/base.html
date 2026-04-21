@@ -1,72 +1,123 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>{% block title %}DietGPT{% endblock %}</title>
-  
-  <!-- Phosphor Icons (iOS Filled Style) -->
-  <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  
-  <link rel="stylesheet" href="/static/style.css?v=1.2">
-  {% block head %}{% endblock %}
-</head>
-<body>
-  <div class="app-layout">
-    <button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('active')"><i class="ph-fill ph-list"></i></button>
-    <div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open');this.classList.remove('active')"></div>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- Primary Meta Tags -->
+    <title>{% block title %}DietGPT — Your AI Nutritionist{% endblock %}</title>
+    <meta name="title" content="DietGPT — Your AI Nutritionist">
+    <meta name="description" content="Get personalized diet plans and workout routines powered by AI. 100% homemade meal plans, sustainable nutrition, and fitness recommendations tailored to your goals.">
+    <meta name="keywords" content="diet plan generator, AI diet plan, personalized meal plan, free diet plan, workout routine, nutrition plan, meal planning, fitness plan, weight loss diet, muscle gain diet, healthy meal plan, sustainable diet, homemade meal plan">
+    <meta name="author" content="DietGPT">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ base_url }}/">
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="sidebar-brand">
-        <div class="brand-icon"><i class="ph-fill ph-heartbeat"></i></div>
-        <span class="brand-name">DietGPT</span>
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ base_url }}/">
+    <meta property="og:title" content="DietGPT — Your AI Nutritionist">
+    <meta property="og:description" content="Get personalized diet plans and workout routines powered by AI. 100% homemade, sustainable, and science-backed nutrition plans.">
+    <meta property="og:image" content="{{ base_url }}/static/og-image.jpg">
+    <meta property="og:site_name" content="DietGPT">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ base_url }}/">
+    <meta name="twitter:title" content="DietGPT — Your AI Nutritionist">
+    <meta name="twitter:description" content="Get personalized diet plans and workout routines powered by AI. 100% homemade, sustainable nutrition plans.">
+    <meta name="twitter:image" content="{{ base_url }}/static/twitter-image.jpg">
+
+    <!-- Theme & Icons -->
+    <meta name="theme-color" content="#000000">
+    <link rel="icon" href="/favicon.ico">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "DietGPT",
+        "url": "{{ base_url }}",
+        "applicationCategory": "HealthApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "description": "AI-powered diet plan generator that creates personalized meal plans and workout routines.",
+        "featureList": [
+            "AI-Powered Diet Plan Generation",
+            "Personalized Meal Plans",
+            "Workout Routine Recommendations",
+            "AI Calorie Estimator",
+            "Sustainable Nutrition Plans",
+            "100% Homemade Meal Suggestions"
+        ]
+    }
+    </script>
+</head>
+<body class="ios-theme">
+    {% if user %}
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <i class="ph-fill ph-brain logo-icon"></i>
+          <span>DietGPT</span>
+        </div>
       </div>
-      <nav class="sidebar-nav">
-        <a href="/dashboard" class="{% if active_page == 'dashboard' %}active{% endif %}">
-          <span class="nav-icon"><i class="ph-fill ph-squares-four"></i></span> Summary
-        </a>
-        <a href="/logger" class="{% if active_page == 'logger' %}active{% endif %}">
-          <span class="nav-icon" style="color:var(--health-orange)"><i class="ph-fill ph-plus-circle"></i></span> Meal Logger
-        </a>
-        <a href="/chat_page" class="{% if active_page == 'chat' %}active{% endif %}">
-          <span class="nav-icon" style="color:var(--health-blue)"><i class="ph-fill ph-chat-circle-dots"></i></span> AI Buddy
-        </a>
-        <div class="nav-separator"></div>
-        <a href="/plan/new" class="{% if active_page == 'new_plan' %}active{% endif %}">
-          <span class="nav-icon" style="color:var(--health-indigo)"><i class="ph-fill ph-magic-wand"></i></span> New Plan
-        </a>
-        <a href="/profile" class="{% if active_page == 'profile' %}active{% endif %}">
-          <span class="nav-icon"><i class="ph-fill ph-user-circle"></i></span> Profile
-        </a>
-      </nav>
       
-      <!-- Footer items in sidebar -->
-      <div style="margin-top:auto; padding: 16px;">
-        <form action="/logout" method="post" style="margin:0">
-          <button type="submit" class="btn-ghost" style="width:100%;text-align:left;font-size:1rem;font-weight:500;">
-            Logout
+      <div class="nav-links">
+        <a href="/dashboard" class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">
+          <i class="ph-fill ph-house"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="/plan/new" class="nav-item {% if active_page == 'new_plan' %}active{% endif %}">
+          <i class="ph-fill ph-plus-circle"></i>
+          <span>New Plan</span>
+        </a>
+        <a href="/logger" class="nav-item {% if active_page == 'logger' %}active{% endif %}">
+          <i class="ph-fill ph-notebook"></i>
+          <span>Meal Logger</span>
+        </a>
+        <a href="/chat_page" class="nav-item {% if active_page == 'chat' %}active{% endif %}">
+          <i class="ph-fill ph-chats-circle"></i>
+          <span>AI Buddy</span>
+        </a>
+        <a href="/profile" class="nav-item {% if active_page == 'profile' %}active{% endif %}">
+          <i class="ph-fill ph-user-circle"></i>
+          <span>Profile</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-pill">
+          <img src="{{ user.picture or 'https://ui-avatars.com/api/?name=' + user.name }}" alt="User">
+          <div class="user-info">
+            <span class="user-name">{{ user.name }}</span>
+          </div>
+        </div>
+        <form action="/logout" method="post" style="margin-top: 12px;">
+          <button type="submit" class="logout-btn">
+            <i class="ph ph-sign-out"></i>
+            <span>Log Out</span>
           </button>
         </form>
       </div>
-    </aside>
+    </nav>
+    {% endif %}
 
-    <!-- Main -->
-    <main class="main-content">
-      <div class="page-container">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-            {% for category, message in messages %}
-              <div class="alert {% if category == 'error' %}alert-error{% elif category == 'success' %}alert-success{% else %}alert-info{% endif %}">
-                <i class="ph-fill ph-info"></i> {{ message }}
-              </div>
-            {% endfor %}
-          {% endif %}
-        {% endwith %}
+    <main class="main-content {% if not user %}full-width{% endif %}">
+      <div class="content-container">
         {% block content %}{% endblock %}
       </div>
     </main>
-  </div>
-  {% block scripts %}{% endblock %}
+
+    {% block scripts %}{% endblock %}
 </body>
 </html>

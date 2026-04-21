@@ -9,6 +9,7 @@ DietGPT is a comprehensive, AI-powered nutritionist and fitness coach applicatio
 - **Smart Meal Logger**: Simply describe your food and DietGPT will automatically estimate your calorie and macronutrient intake (Protein, Carbs, Fats) using AI.
 - **Customized Diet & Workout Plans**: Generate tailored meal plans and workout routines based on specific physical metrics, dietary preferences (e.g., veg/non-veg), region, and goals (Bulk, Cut, Maintain).
 - **Responsive Dashboard**: An intuitive Apple Health-inspired UI to track daily caloric progress and review generated plans.
+- **100% Homemade & Sustainable**: All meal recommendations focus on home-cooked staples with minimal waste and seasonal ingredients.
 
 ## Tech Stack
 

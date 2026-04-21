@@ -1,95 +1,141 @@
 {% extends "base.html" %}
-{% set active_page = "new_plan" %}
-{% block title %}Plan Result — DietGPT{% endblock %}
+{% block title %}Your Diet Plan — DietGPT{% endblock %}
 
 {% block content %}
 <div class="page-header animate-in">
-  <h1>Health Plan Generated</h1>
-  <p>Added to your active plans.</p>
+  <h1>Your Neural Plan</h1>
+  <p>Scientifically tailored nutrition and workout guidance.</p>
 </div>
 
-<!-- Nutrition Stats -->
-{% if nutrition_stats %}
-<div class="stats-grid animate-in" style="margin-bottom:32px; animation-delay: 50ms;">
-  {% if nutrition_stats.calories %}
-  <div class="stat-card">
-    <div class="stat-header">
-      <i class="ph-fill ph-flame" style="color:var(--health-red)"></i>
-      <span>Calories/Day</span>
+<div class="dashboard-grid animate-in" style="animation-delay: 100ms;">
+  <!-- Calories & Macros -->
+  <div class="card card-full">
+    <div class="card-header">
+      <i class="ph-fill ph-chart-pie-slice card-icon" style="color: #FF2D55;"></i>
+      <div class="card-title">Daily Nutrition Targets</div>
     </div>
-    <div class="stat-value c-cal">{{ nutrition_stats.calories }}</div>
-  </div>
-  {% endif %}
-  {% if nutrition_stats.protein %}
-  <div class="stat-card">
-    <div class="stat-header">
-      <i class="ph-fill ph-barbell" style="color:var(--health-green)"></i>
-      <span>Protein{% if nutrition_stats.protein_percent %} ({{ nutrition_stats.protein_percent }}%){% endif %}</span>
+    <div class="macro-grid">
+      <div class="macro-item">
+        <div class="macro-value">{{ nutrition_stats.calories or 'N/A' }}</div>
+        <div class="macro-label">Calories (kcal)</div>
+      </div>
+      <div class="macro-item">
+        <div class="macro-value">{{ nutrition_stats.protein or 'N/A' }}g</div>
+        <div class="macro-label">Protein ({{ nutrition_stats.protein_percent or '0' }}%)</div>
+      </div>
+      <div class="macro-item">
+        <div class="macro-value">{{ nutrition_stats.carbs or 'N/A' }}g</div>
+        <div class="macro-label">Carbs ({{ nutrition_stats.carbs_percent or '0' }}%)</div>
+      </div>
+      <div class="macro-item">
+        <div class="macro-value">{{ nutrition_stats.fats or 'N/A' }}g</div>
+        <div class="macro-label">Fats ({{ nutrition_stats.fats_percent or '0' }}%)</div>
+      </div>
     </div>
-    <div class="stat-value c-pro">{{ nutrition_stats.protein }}<span class="stat-unit">g</span></div>
-  </div>
-  {% endif %}
-  {% if nutrition_stats.carbs %}
-  <div class="stat-card">
-    <div class="stat-header">
-      <i class="ph-fill ph-drop" style="color:var(--health-cyan)"></i>
-      <span>Carbs{% if nutrition_stats.carbs_percent %} ({{ nutrition_stats.carbs_percent }}%){% endif %}</span>
+    
+    <!-- Extra Nutrients -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 12px; margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.05);">
+        {% if nutrition_stats.fiber %}
+        <div class="text-center">
+            <div style="font-size: 17px; font-weight: 600;">{{ nutrition_stats.fiber }}g</div>
+            <div style="font-size: 12px; color: #8e8e93; margin-top: 2px;">Fiber</div>
+        </div>
+        {% endif %}
+        {% if nutrition_stats.sodium %}
+        <div class="text-center">
+            <div style="font-size: 17px; font-weight: 600;">{{ nutrition_stats.sodium }}mg</div>
+            <div style="font-size: 12px; color: #8e8e93; margin-top: 2px;">Sodium</div>
+        </div>
+        {% endif %}
+        {% if nutrition_stats.calcium %}
+        <div class="text-center">
+            <div style="font-size: 17px; font-weight: 600;">{{ nutrition_stats.calcium }}mg</div>
+            <div style="font-size: 12px; color: #8e8e93; margin-top: 2px;">Calcium</div>
+        </div>
+        {% endif %}
+        {% if nutrition_stats.iron %}
+        <div class="text-center">
+            <div style="font-size: 17px; font-weight: 600;">{{ nutrition_stats.iron }}mg</div>
+            <div style="font-size: 12px; color: #8e8e93; margin-top: 2px;">Iron</div>
+        </div>
+        {% endif %}
+        {% if nutrition_stats.vitamin_d %}
+        <div class="text-center">
+            <div style="font-size: 17px; font-weight: 600;">{{ nutrition_stats.vitamin_d }}IU</div>
+            <div style="font-size: 12px; color: #8e8e93; margin-top: 2px;">Vit D</div>
+        </div>
+        {% endif %}
+        {% if nutrition_stats.water %}
+        <div class="text-center">
+            <div style="font-size: 17px; font-weight: 600;">{{ nutrition_stats.water }}L</div>
+            <div style="font-size: 12px; color: #8e8e93; margin-top: 2px;">Water</div>
+        </div>
+        {% endif %}
     </div>
-    <div class="stat-value c-car">{{ nutrition_stats.carbs }}<span class="stat-unit">g</span></div>
   </div>
-  {% endif %}
-  {% if nutrition_stats.fats %}
-  <div class="stat-card">
-    <div class="stat-header">
-      <i class="ph-fill ph-circle" style="color:var(--health-orange)"></i>
-      <span>Fats{% if nutrition_stats.fats_percent %} ({{ nutrition_stats.fats_percent }}%){% endif %}</span>
+
+  <!-- Meals -->
+  <div class="card">
+    <div class="card-header">
+      <i class="ph-fill ph-cooking-pot card-icon" style="color: #FF9500;"></i>
+      <div class="card-title">Daily Meal Plan</div>
     </div>
-    <div class="stat-value c-fat">{{ nutrition_stats.fats }}<span class="stat-unit">g</span></div>
+    <div class="ios-list">
+      <div class="ios-list-header">Breakfast</div>
+      {% for item in breakfast_names %}
+      <div class="ios-list-item">
+        <div class="ios-list-label">{{ item }}</div>
+      </div>
+      {% endfor %}
+      
+      <div class="ios-list-header">Lunch</div>
+      {% for item in lunch_names %}
+      <div class="ios-list-item">
+        <div class="ios-list-label">{{ item }}</div>
+      </div>
+      {% endfor %}
+      
+      <div class="ios-list-header">Dinner</div>
+      {% for item in dinner_names %}
+      <div class="ios-list-item">
+        <div class="ios-list-label">{{ item }}</div>
+      </div>
+      {% endfor %}
+    </div>
   </div>
-  {% endif %}
+
+  <!-- Workouts & Staples -->
+  <div class="card">
+    <div class="card-header">
+      <i class="ph-fill ph-barbell card-icon" style="color: #5856D6;"></i>
+      <div class="card-title">Fitness & Prep</div>
+    </div>
+    <div class="ios-list">
+      <div class="ios-list-header">Workout Routine</div>
+      {% if workout_names %}
+        {% for item in workout_names %}
+        <div class="ios-list-item">
+          <div class="ios-list-label">{{ item }}</div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="ios-list-item">
+          <div class="ios-list-label" style="color: #8e8e93;">No specific exercises found</div>
+        </div>
+      {% endif %}
+      
+      <div class="ios-list-header">Homemade Staples</div>
+      {% for item in homemade_staples %}
+      <div class="ios-list-item">
+        <div class="ios-list-label">{{ item }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
 </div>
-{% endif %}
 
-<!-- Formatted Meal Sections (No bulky text block) -->
-<div class="animate-in" style="animation-delay: 100ms;">
-  {% if homemade_staples %}
-  <div class="plan-data-section">
-    <h3>Staples & Prep</h3>
-    <ul>{% for item in homemade_staples %}<li>{{ item }}</li>{% endfor %}</ul>
-  </div>
-  {% endif %}
-
-  {% if breakfast_names %}
-  <div class="plan-data-section">
-    <h3>Breakfast</h3>
-    <ul>{% for item in breakfast_names %}<li>{{ item }}</li>{% endfor %}</ul>
-  </div>
-  {% endif %}
-
-  {% if lunch_names %}
-  <div class="plan-data-section">
-    <h3>Lunch</h3>
-    <ul>{% for item in lunch_names %}<li>{{ item }}</li>{% endfor %}</ul>
-  </div>
-  {% endif %}
-
-  {% if dinner_names %}
-  <div class="plan-data-section">
-    <h3>Dinner</h3>
-    <ul>{% for item in dinner_names %}<li>{{ item }}</li>{% endfor %}</ul>
-  </div>
-  {% endif %}
-
-  {% if workout_names %}
-  <div class="plan-data-section">
-    <h3 style="color:var(--health-indigo)">Workouts</h3>
-    <ul>{% for item in workout_names %}<li>{{ item }}</li>{% endfor %}</ul>
-  </div>
-  {% endif %}
-</div>
-
-<div class="animate-in" style="margin-top:32px;display:flex;gap:16px; animation-delay: 150ms;">
-  <a href="/dashboard" class="btn btn-primary">Done</a>
-  <a href="/plan/new" class="btn btn-secondary">New Plan</a>
+<div class="animate-in" style="margin-top: 32px; text-align: center; animation-delay: 300ms;">
+  <a href="/plan/new" class="btn btn-secondary">Generate Another</a>
+  <a href="/dashboard" class="btn btn-primary" style="margin-left: 12px;">Go to Dashboard</a>
 </div>
 {% endblock %}
