@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% set active_page = "new_plan" %}
+{% block title %}New Plan — DietGPT{% endblock %}
+
+{% block content %}
+<div class="page-header animate-in">
+  <h1>New Plan</h1>
+  <p>Generate a customized, data-driven diet plan.</p>
+</div>
+
+{% if error %}
+<div class="alert alert-error animate-in">
+  <i class="ph-fill ph-warning-circle"></i> {{ error }}
+</div>
+{% endif %}
+
+<form action="/recommend" method="post" id="plan-form" class="animate-in" style="max-width: 600px; margin: 0 auto; animation-delay: 50ms;">
+  
+  <div class="section-title">Personal Metrics</div>
+  <div class="ios-list">
+    <div class="ios-list-item">
+      <div class="ios-list-label">Age</div>
+      <input name="age" type="number" class="ios-list-value" placeholder="Required" required value="{{ profile.get('age', '') if profile else '' }}">
+    </div>
+    <div class="ios-list-item">
+      <div class="ios-list-label">Gender</div>
+      <select name="gender" class="ios-list-value" required>
+        <option value="">Select</option>
+        <option value="male" {% if profile and profile.get('gender') == 'male' %}selected{% endif %}>Male</option>
+        <option value="female" {% if profile and profile.get('gender') == 'female' %}selected{% endif %}>Female</option>
+      </select>
+    </div>
+    <div class="ios-list-item">
+      <div class="ios-list-label">Weight (kg)</div>
+      <input name="weight" type="number" step="0.1" class="ios-list-value" placeholder="Required" required value="{{ profile.get('weight', '') if profile else '' }}">
+    </div>
+    <div class="ios-list-item">
+      <div class="ios-list-label">Height (ft)</div>
+      <input name="height" type="number" step="0.1" class="ios-list-value" placeholder="Required" required value="{{ profile.get('height', '') if profile else '' }}">
+    </div>
+  </div>
+
+  <div class="section-title">Goals</div>
+  <div class="ios-list">
+    <div class="ios-list-item">
+      <div class="ios-list-label">Goal</div>
+      <select name="goal" class="ios-list-value" required>
+        <option value="">Select</option>
+        <option value="bulk" {% if profile and profile.get('goal') == 'bulk' %}selected{% endif %}>Bulk</option>
+        <option value="cut" {% if profile and profile.get('goal') == 'cut' %}selected{% endif %}>Cut</option>
+        <option value="maintain" {% if profile and profile.get('goal') == 'maintain' %}selected{% endif %}>Maintain</option>
+      </select>
+    </div>
+    <div class="ios-list-item">
+      <div class="ios-list-label">Activity Level</div>
+      <select name="activity_level" class="ios-list-value" required>
+        <option value="">Select</option>
+        <option value="sedentary" {% if profile and profile.get('activity_level') == 'sedentary' %}selected{% endif %}>Sedentary</option>
+        <option value="light" {% if profile and profile.get('activity_level') == 'light' %}selected{% endif %}>Light</option>
+        <option value="moderate" {% if profile and profile.get('activity_level') == 'moderate' %}selected{% endif %}>Moderate</option>
+        <option value="active" {% if profile and profile.get('activity_level') == 'active' %}selected{% endif %}>Active</option>
+        <option value="very_active" {% if profile and profile.get('activity_level') == 'very_active' %}selected{% endif %}>Very Active</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="section-title">Preferences</div>
+  <div class="ios-list">
+    <div class="ios-list-item">
+      <div class="ios-list-label">Diet Type</div>
+      <select name="veg_or_nonveg" class="ios-list-value" required>
+        <option value="">Select</option>
+        <option value="veg" {% if profile and profile.get('diet_pref') == 'veg' %}selected{% endif %}>Vegetarian</option>
+        <option value="nonveg" {% if profile and profile.get('diet_pref') == 'nonveg' %}selected{% endif %}>Non-Vegetarian</option>
+      </select>
+    </div>
+    <div class="ios-list-item">
+      <div class="ios-list-label">Region</div>
+      <input name="region" class="ios-list-value" placeholder="Required" required value="{{ profile.get('region', '') if profile else '' }}">
+    </div>
+    <div class="ios-list-item">
+      <div class="ios-list-label">Cuisine Preference</div>
+      <input name="foodtype" class="ios-list-value" placeholder="Required" required>
+    </div>
+    <div class="ios-list-item">
+      <div class="ios-list-label">Medical Conditions</div>
+      <input name="disease" class="ios-list-value" placeholder="None" value="none">
+    </div>
+    <div class="ios-list-item">
+      <div class="ios-list-label">Allergies</div>
+      <input name="allergics" class="ios-list-value" placeholder="None" value="{{ profile.get('allergies', 'none') if profile else 'none' }}">
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary btn-block" style="margin-top:24px;" id="submit-btn">
+    <span id="submit-text">Generate Neural Plan</span>
+  </button>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('plan-form').addEventListener('submit', function() {
+  const btn = document.getElementById('submit-btn');
+  const text = document.getElementById('submit-text');
+  btn.disabled = true;
+  text.textContent = 'Processing...';
+});
+</script>
+{% endblock %}

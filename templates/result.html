@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% set active_page = "new_plan" %}
+{% block title %}Plan Result — DietGPT{% endblock %}
+
+{% block content %}
+<div class="page-header animate-in">
+  <h1>Health Plan Generated</h1>
+  <p>Added to your active plans.</p>
+</div>
+
+<!-- Nutrition Stats -->
+{% if nutrition_stats %}
+<div class="stats-grid animate-in" style="margin-bottom:32px; animation-delay: 50ms;">
+  {% if nutrition_stats.calories %}
+  <div class="stat-card">
+    <div class="stat-header">
+      <i class="ph-fill ph-flame" style="color:var(--health-red)"></i>
+      <span>Calories/Day</span>
+    </div>
+    <div class="stat-value c-cal">{{ nutrition_stats.calories }}</div>
+  </div>
+  {% endif %}
+  {% if nutrition_stats.protein %}
+  <div class="stat-card">
+    <div class="stat-header">
+      <i class="ph-fill ph-barbell" style="color:var(--health-green)"></i>
+      <span>Protein{% if nutrition_stats.protein_percent %} ({{ nutrition_stats.protein_percent }}%){% endif %}</span>
+    </div>
+    <div class="stat-value c-pro">{{ nutrition_stats.protein }}<span class="stat-unit">g</span></div>
+  </div>
+  {% endif %}
+  {% if nutrition_stats.carbs %}
+  <div class="stat-card">
+    <div class="stat-header">
+      <i class="ph-fill ph-drop" style="color:var(--health-cyan)"></i>
+      <span>Carbs{% if nutrition_stats.carbs_percent %} ({{ nutrition_stats.carbs_percent }}%){% endif %}</span>
+    </div>
+    <div class="stat-value c-car">{{ nutrition_stats.carbs }}<span class="stat-unit">g</span></div>
+  </div>
+  {% endif %}
+  {% if nutrition_stats.fats %}
+  <div class="stat-card">
+    <div class="stat-header">
+      <i class="ph-fill ph-circle" style="color:var(--health-orange)"></i>
+      <span>Fats{% if nutrition_stats.fats_percent %} ({{ nutrition_stats.fats_percent }}%){% endif %}</span>
+    </div>
+    <div class="stat-value c-fat">{{ nutrition_stats.fats }}<span class="stat-unit">g</span></div>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+<!-- Formatted Meal Sections (No bulky text block) -->
+<div class="animate-in" style="animation-delay: 100ms;">
+  {% if homemade_staples %}
+  <div class="plan-data-section">
+    <h3>Staples & Prep</h3>
+    <ul>{% for item in homemade_staples %}<li>{{ item }}</li>{% endfor %}</ul>
+  </div>
+  {% endif %}
+
+  {% if breakfast_names %}
+  <div class="plan-data-section">
+    <h3>Breakfast</h3>
+    <ul>{% for item in breakfast_names %}<li>{{ item }}</li>{% endfor %}</ul>
+  </div>
+  {% endif %}
+
+  {% if lunch_names %}
+  <div class="plan-data-section">
+    <h3>Lunch</h3>
+    <ul>{% for item in lunch_names %}<li>{{ item }}</li>{% endfor %}</ul>
+  </div>
+  {% endif %}
+
+  {% if dinner_names %}
+  <div class="plan-data-section">
+    <h3>Dinner</h3>
+    <ul>{% for item in dinner_names %}<li>{{ item }}</li>{% endfor %}</ul>
+  </div>
+  {% endif %}
+
+  {% if workout_names %}
+  <div class="plan-data-section">
+    <h3 style="color:var(--health-indigo)">Workouts</h3>
+    <ul>{% for item in workout_names %}<li>{{ item }}</li>{% endfor %}</ul>
+  </div>
+  {% endif %}
+</div>
+
+<div class="animate-in" style="margin-top:32px;display:flex;gap:16px; animation-delay: 150ms;">
+  <a href="/dashboard" class="btn btn-primary">Done</a>
+  <a href="/plan/new" class="btn btn-secondary">New Plan</a>
+</div>
+{% endblock %}
